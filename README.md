@@ -1,24 +1,95 @@
-# README
+# Tea Service
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+## What does this API do?
+it allows customers to subscribe to a tea subscription where they are able to view all their subscriptions, subscribe to a subscription, or cancel.
 
-Things you may want to cover:
+## Table of Contents
+- [Database](#database-schema)
+- [Endpoints](#endpoints)
 
-* Ruby version
+## Database Schema
+![Schema Setup, includes customers, subscription_customers, subscriptions, tea_subscrptions, and teas](<database.png>)
 
-* System dependencies
+**Do rails db:{drop,create,migrate,seed} before use!**
 
-* Configuration
+## Endpoints
 
-* Database creation
+### Subscribe a Customer to a Tea Subscription
+Request:
+```
+POST /api/v1/customers/:customer_id/subscriptions/:subscription_id
+```
 
-* Database initialization
+Regular Response:
+```
+{
+  "success": "Customer has been successfully subscribed."
+}
+```
 
-* How to run the test suite
+Error Response:
+```
+{
 
-* Services (job queues, cache servers, search engines, etc.)
+  "error": "Customer was not able to be subscribed. Please make sure the customer or subscription id is correct."
+}
+```
 
-* Deployment instructions
+### Cancel a Customer's Tea Subscription
+Request:
+```
+PATCH /api/v1/customers/:customer_id/subscriptions/:subscription_id
+```
 
-* ...
+Regular Response:
+```
+{
+  "success": "Customer has been successfully unsubscribed."
+}
+```
+
+Error Response:
+```
+{
+  "error": "Customer was not able to be unsubscribed. Please make sure the customer or subscription id is correct."
+}
+```
+
+### See all of a Customer's Subscriptions
+Request:
+```
+GET /api/v1/customers/:customer_id/subscriptions
+```
+
+Regular Response:
+```
+{
+  "data": [
+    {
+      "id": "1",
+      "type": "subscription",
+      "attributes": {
+        "title": "Starter Pack",
+        "price": 15.0,
+        "frequency": "3 weeks"
+      }
+    },
+    {...}.
+    {...}
+  ]
+}
+```
+
+Invalid Customer Response:
+```
+  {
+    "error": "Couldn't find Customer with 'id'=2"
+  }
+```
+
+Customer has no Subscriptions Response:
+```
+{
+  "data": []
+}
+```
